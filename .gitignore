@@ -1,0 +1,13 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+.vscode/
+
+**/__*
+
+_export/*
+_export/**/*
+!_export/.gdignore
+!_export/*/
+!_export/**/.keep
