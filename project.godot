@@ -12,6 +12,7 @@ config_version=5
 
 config/name="TagPlayer"
 config/version="0.0.0"
+run/main_scene="uid://cq2qoc5lcm077"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://application/icon.svg"
 
