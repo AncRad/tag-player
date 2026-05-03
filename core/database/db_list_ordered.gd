@@ -7,8 +7,6 @@ class_name DBListOrdered
 			inverted = value
 			changes_up()
 
-var _tracks : Array[DBTrack]
-
 
 func get_ordered() -> DBListOrdered:
 	return self

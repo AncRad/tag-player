@@ -4,8 +4,6 @@ class_name DBListFiltered
 @export var filter : DBTrackComparatorNode:
 	set = set_filter
 
-var _tracks : Array[DBTrack]
-
 
 func get_tracks() -> Array[DBTrack]:
 	return _tracks.duplicate()
@@ -26,7 +24,8 @@ func _update() -> void:
 	if parent:
 		tracks = parent.get_tracks()
 	
-	tracks = tracks.filter(filter.compare)
+	if filter:
+		tracks = tracks.filter(filter.compare)
 	
 	if _tracks != tracks:
 		_tracks = tracks

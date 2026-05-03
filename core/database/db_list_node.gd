@@ -21,6 +21,8 @@ var _changes_parent_cached : int
 ## Ссылка на упорядоченный DBListNode в виде DBListOrdered - не удерживает в памяти (слабая ссылка).
 var _ordered : DBListOrdered
 
+var _tracks : Array[DBTrack]
+
 
 func _init(_parent : DBListNode = null) -> void:
 	parent = _parent
@@ -156,4 +158,10 @@ func get_tracks() -> Array[DBTrack]:
 	return []
 
 func _update() -> void:
-	changes_up()
+	var tracks : Array[DBTrack]
+	if parent:
+		tracks = parent.get_tracks()
+	
+	if _tracks != tracks:
+		_tracks = []
+		changes_up()

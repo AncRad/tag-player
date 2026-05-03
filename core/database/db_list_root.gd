@@ -11,7 +11,6 @@ signal removed_track(track : DBTrack)
 
 var _items : Array[DBItem]
 var _tags : Array[DBTag]
-var _tracks : Array[DBTrack]
 
 
 func _init() -> void:
@@ -155,6 +154,11 @@ func find_tags_by_name(name : StringName, p_match := true, no_register := true, 
 	
 	return tags
 
+## FIXME:
+## Ищет только по первому имени.
+## Если тег имеет несколько имён и передаётся альтернативное имя — он не будет найден и создастся дубликат.
+## При частичном поиске (p_match=true по умолчанию) это ещё и может найти другой тег по подстроке вместо точного совпадения.
+## Стоит искать exact match.
 func get_tag_or_create(names : Array[StringName], roles : Array[StringName] = []) -> DBTag:
 	if names:
 		var tags := find_tags_by_name(names[0])
