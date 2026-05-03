@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://b1ghk7cytclpj"]
+
+[ext_resource type="Script" uid="uid://crth55fspj0ur" path="res://core/database/_test/_sterss_test/_database_stress_test.gd" id="1_h18gm"]
+[ext_resource type="Script" uid="uid://bhic7qjp5we5c" path="res://core/database/db_list_root.gd" id="2_rf3k0"]
+
+[sub_resource type="Resource" id="Resource_xwkvk"]
+resource_local_to_scene = true
+script = ExtResource("2_rf3k0")
+metadata/_custom_type_script = "uid://bhic7qjp5we5c"
+
+[node name="_DatabaseSterssTest" type="Node" unique_id=1638917268]
+script = ExtResource("1_h18gm")
+root = SubResource("Resource_xwkvk")
+
+[node name="ChangesTimer" type="Timer" parent="." unique_id=1930757505]
+wait_time = 2.0
+autostart = true
+
+[node name="BuildTreeTimer" type="Timer" parent="." unique_id=1207624829]
+wait_time = 5.0
+autostart = true
+
+[connection signal="timeout" from="ChangesTimer" to="." method="_on_changes_timer_timeout"]
+[connection signal="timeout" from="BuildTreeTimer" to="." method="_on_build_tree_timer_timeout"]
