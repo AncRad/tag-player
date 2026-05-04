@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://c76fi3i148pjc"]
+
+[ext_resource type="Script" uid="uid://bic7363ogjets" path="res://core/database/_test/_unit_test_db_list_root/_unit_test_db_list_root.gd" id="1_unit01"]
+
+[node name="_UnitTestDbListRoot" type="Node" unique_id=500675723]
+script = ExtResource("1_unit01")
