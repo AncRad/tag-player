@@ -152,6 +152,13 @@ func get_ordered() -> DBListOrdered:
 func get_not_ordered(_default : DBListNode = self) -> DBListNode:
 	return self
 
+func get_root() -> DBListRoot:
+	if parent:
+		return parent.get_root()
+	if self is DBListRoot:
+		return self
+	return null
+
 func get_tracks() -> Array[DBTrack]:
 	if parent:
 		return parent.get_tracks()
