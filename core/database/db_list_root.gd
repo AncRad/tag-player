@@ -47,6 +47,7 @@ func add_item(item : DBItem) -> void:
 		item._root = self
 		added_item.emit(item)
 		added_track.emit(item)
+		list_changed.emit()
 	
 	else:
 		_items.append(item)
@@ -75,6 +76,7 @@ func remove_item(item : DBItem) -> void:
 		item._root = null
 		removed_item.emit(item)
 		removed_track.emit(item)
+		list_changed.emit()
 	
 	else:
 		_items.erase(item)
