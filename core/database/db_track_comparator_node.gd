@@ -21,15 +21,18 @@ enum CompareMode {
 				tag.changed.connect(_on_tag_changed.bind(weakref(tag)))
 		emit_changed()
 
-@export var words : Array[String]:
+@export var phrases : Array[String]:
 	set(value):
-		words = value
-		_match_strings.clear()
-		for word : String in words:
-			for sub_word in word.split(' ', false):
-				sub_word = sub_word.strip_edges()
-				if sub_word:
-					_match_strings.append(str('*', sub_word, '*'))
+		phrases = value
+		_match_phrases.clear()
+		for phrase : String in phrases:
+			var words : Array[String]
+			for word in phrase.split(' ', false):
+				word = word.strip_edges()
+				if word:
+					words.append(str('*', word, '*'))
+			if words:
+				_match_phrases.append(words)
 		emit_changed()
 
 @export var filters : Array[DBTrackComparatorNode]:
@@ -47,37 +50,53 @@ enum CompareMode {
 			inverted = value
 			emit_changed()
 
-var _match_strings : Array[String]
+var _match_phrases : Array[Array] # : Array[Array[String]]
 
 
 func compare(track : DBTrack) -> bool:
 	match compare_mode:
 		CompareMode.And:
-			for tag in tags:
-				if tag not in track._tag_to_role:	
+			if tags:
+				if not tags.all(func (tag : DBTag): return tag in track._tag_to_role):
 					return false != inverted
 			
-			for match_string : String in _match_strings:
-				if not track.order_string.matchn(match_string):
+			if _match_phrases:
+				var all_phrase_matched_all_words : bool = _match_phrases.all(
+						func (phrase : Array[String]):
+								return phrase.all(
+									func (word : String):
+											# TODO заменить track.order_string на track.find_string
+											return track.order_string.matchn(word)
+								)
+				)
+				if not all_phrase_matched_all_words:
 					return false != inverted
 			
-			for filter in filters:
-				if not filter.compare(track):
+			if filters:
+				if not filters.all(func (filter : DBTrackComparatorNode): return filter.compare(track)):
 					return false != inverted
 			
 			return true != inverted
 		
 		CompareMode.Or:
-			for tag in tags:
-				if tag in track._tag_to_role:
+			if tags:
+				if tags.any(func (tag : DBTag): return tag in track._tag_to_role):
 					return true != inverted
 			
-			for match_string : String in _match_strings:
-				if track.order_string.matchn(match_string):
+			if _match_phrases:
+				var any_phrase_matched_all_words : bool = _match_phrases.any(
+						func (phrase : Array[String]):
+								return phrase.all(
+									func (word : String):
+											# TODO заменить track.order_string на track.find_string
+											return track.order_string.matchn(word)
+								)
+				)
+				if any_phrase_matched_all_words:
 					return true != inverted
 			
-			for filter in filters:
-				if filter.compare(track):
+			if filters:
+				if filters.any(func (filter : DBTrackComparatorNode): return filter.compare(track)):
 					return true != inverted
 			
 			return false != inverted
@@ -89,19 +108,19 @@ func _on_tag_changed(weak : WeakRef) -> void:
 	assert(weak.get_ref() is DBTag)
 	
 	var tag : DBTag = weak.get_ref()
-	if tag not in tags:
-		tag.changed.disconnect(_on_tag_changed)
-		return
+	if tag in tags:
+		emit_changed()
 	
-	emit_changed()
+	else:
+		tag.changed.disconnect(_on_tag_changed)
 
 func _on_filter_changed(weak : WeakRef) -> void:
 	assert(weak)
 	assert(weak.get_ref() is DBTrackComparatorNode)
 	
 	var filter : DBTrackComparatorNode = weak.get_ref()
-	if filter not in filters:
-		filter.changed.disconnect(_on_filter_changed)
-		return
+	if filter in filters:
+		emit_changed()
 	
-	emit_changed()
+	else:
+		filter.changed.disconnect(_on_filter_changed)
