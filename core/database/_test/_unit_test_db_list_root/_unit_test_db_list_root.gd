@@ -83,6 +83,8 @@ func _test_add_track() -> void:
 	root.added_item.connect(func(i : DBItem): sig_item.append(i))
 	root.added_track.connect(func(t : DBTrack): sig_track.append(t))
 	root.added_tag.connect(func(t : DBTrack): sig_tag.append(t))
+	var sig_list_changed : Array
+	root.list_changed.connect(func(): sig_list_changed.append(null))
 	
 	root.add_item(track)
 	root.update()
@@ -102,10 +104,9 @@ func _test_add_track() -> void:
 		'get_tags() пуст — в root добавлен только track')
 	
 	# Сигналы
-	_expect(sig_item.size() == 1 and sig_item[0] == track,
-		'сигнал added_item(track) получен ровно 1 раз')
-	_expect(sig_track.size() == 1 and sig_track[0] == track,
-		'сигнал added_track(track) получен ровно 1 раз')
+	_expect(sig_item.size() == 1 and sig_item[0] == track, 'сигнал added_item(track) получен ровно 1 раз')
+	_expect(sig_track.size() == 1 and sig_track[0] == track, 'сигнал added_track(track) получен ровно 1 раз')
+	_expect(sig_list_changed.size() == 1, 'сигнал sig_list_changed получен ровно 1 раз')
 	_expect(sig_tag.size() == 0, 'сигнал added_tag получен ровно 0 раз')
 
 
@@ -123,6 +124,8 @@ func _test_add_tag() -> void:
 	var sig_tag : Array[DBTag] = []
 	root.added_item.connect(func(i : DBItem): sig_item.append(i))
 	root.added_tag.connect(func(t : DBTag): sig_tag.append(t))
+	var sig_list_changed : Array
+	root.list_changed.connect(func(): sig_list_changed.append(null))
 	
 	root.add_item(tag)
 	root.update()
@@ -144,6 +147,7 @@ func _test_add_tag() -> void:
 		'сигнал added_item(tag) получен ровно 1 раз')
 	_expect(sig_tag.size() == 1 and sig_tag[0] == tag,
 		'сигнал added_tag(tag) получен ровно 1 раз')
+	_expect(sig_list_changed.size() == 0, 'сигнал sig_list_changed получен ровно 0 раз')
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -178,6 +182,8 @@ func _test_tag_creates_records() -> void:
 	var track_list_changed := [0]
 	tag.track_list_changed.connect(func(): tag_list_changed[0] += 1)
 	track.tag_list_changed.connect(func(): track_list_changed[0] += 1)
+	var sig_list_changed : Array
+	root.list_changed.connect(func(): sig_list_changed.append(null))
 	
 	tag.tag(track, &'genre')
 	root.update()
@@ -207,6 +213,7 @@ func _test_tag_creates_records() -> void:
 		'сигнал tag.track_list_changed получен ровно 1 раз')
 	_expect(track_list_changed[0] == 1,
 		'сигнал track.tag_list_changed получен ровно 1 раз')
+	_expect(sig_list_changed.size() == 0, 'сигнал sig_list_changed получен ровно 0 раз')
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -245,6 +252,8 @@ func _test_untag_removes_records() -> void:
 	var track_list_changed := [0]
 	tag.track_list_changed.connect(func(): tag_list_changed[0] += 1)
 	track.tag_list_changed.connect(func(): track_list_changed[0] += 1)
+	var sig_list_changed : Array
+	root.list_changed.connect(func(): sig_list_changed.append(null))
 	
 	tag.untag(track)
 	root.update()
@@ -266,6 +275,7 @@ func _test_untag_removes_records() -> void:
 		'сигнал tag.track_list_changed получен ровно 1 раз')
 	_expect(track_list_changed[0] == 1,
 		'сигнал track.tag_list_changed получен ровно 1 раз')
+	_expect(sig_list_changed.size() == 0, 'сигнал sig_list_changed получен ровно 0 раз')
 
 
 # ─────────────────────────────────────────────────────────────────────────────
