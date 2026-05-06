@@ -41,7 +41,9 @@ func load_dir(path : String) -> void:
 		track.file_path = file_path
 		root.add_item(track)
 		
-		var file_name_parts : PackedStringArray = file_name.split('-', false, 2)
+		var file_name_parts : PackedStringArray = file_name.split(' - ', false)
+		if file_name_parts.size() < 2:
+			file_name_parts = file_name.split('-', false)
 		if file_name_parts.size() > 1:
 			
 			# обнаружить имена создателей в левой части имени файла
@@ -57,9 +59,6 @@ func load_dir(path : String) -> void:
 				# заменить разделители авторов на запятые
 				for mark : String in marks_to_replace:
 					file_name_creators = file_name_creators.replacen(mark, ',')
-				# избавиться от двойных пробелов
-				while '  ' in file_name_creators:
-					file_name_creators = file_name_creators.replacen('  ', ' ')
 				# связать теги авторов с треком
 				for creator_name in file_name_creators.split(',', false):
 					creator_name = creator_name.strip_edges()
