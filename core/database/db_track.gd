@@ -2,7 +2,7 @@ extends DBItem
 class_name DBTrack
 
 @warning_ignore('unused_signal')
-signal tag_list_changed
+signal tags_changed
 
 @export var file_path : StringName
 @export var name : StringName

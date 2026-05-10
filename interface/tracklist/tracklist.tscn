@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bej3i78pngx2v"]
 
-[ext_resource type="Script" uid="uid://byiif57iia472" path="res://interface/track_list/tracklist.gd" id="1_vatlw"]
+[ext_resource type="Script" uid="uid://byiif57iia472" path="res://interface/tracklist/tracklist.gd" id="1_vatlw"]
 
 [node name="Tracklist" type="Control" unique_id=966963671]
 clip_contents = true

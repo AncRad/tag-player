@@ -1,7 +1,7 @@
 extends DBItem
 class_name DBTag
 
-signal track_list_changed
+signal tracks_changed
 
 var roles : Array[StringName]
 var names : Array[StringName]
@@ -22,6 +22,7 @@ func tag(track : DBTrack, role : StringName) -> void:
 	_track_to_role[track] = role
 	
 	# FIXME переместить в DBTrack
+	# FIXME исключить циклическую зависимость
 	track._tag_to_role[self] = role
 	if not role in track._role_to_tags:
 		track._role_to_tags[role] = [] as Array[DBTag]
@@ -30,10 +31,10 @@ func tag(track : DBTrack, role : StringName) -> void:
 	track.changes_up()
 	
 	changes_up()
-	track_list_changed.emit()
+	tracks_changed.emit()
 	
 	# FIXME переместить в DBTrack
-	track.tag_list_changed.emit()
+	track.tags_changed.emit()
 
 func untag(track : DBTrack) -> void:
 	assert(track)
@@ -45,6 +46,7 @@ func untag(track : DBTrack) -> void:
 	_track_to_role.erase(track)
 	
 	# FIXME переместить в DBTrack
+	# FIXME исключить циклическую зависимость
 	track._role_to_tags[role].erase(self)
 	if not track._role_to_tags[role]:
 		track._role_to_tags.erase(role)
@@ -53,10 +55,10 @@ func untag(track : DBTrack) -> void:
 	track.changes_up()
 	
 	changes_up()
-	track_list_changed.emit()
+	tracks_changed.emit()
 	
 	# FIXME переместить в DBTrack
-	track.tag_list_changed.emit()
+	track.tags_changed.emit()
 
 func get_track_to_role() -> Dictionary[DBTrack, StringName]:
 	return _track_to_role.duplicate()

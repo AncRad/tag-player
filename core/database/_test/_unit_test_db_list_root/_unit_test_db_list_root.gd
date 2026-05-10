@@ -178,10 +178,10 @@ func _test_tag_creates_records() -> void:
 	var tag := _make_tag(root, &'rock')
 	
 	# Сигналы — массив как изменяемый счётчик (лямбды захватывают по ссылке)
-	var tag_list_changed := [0]
-	var track_list_changed := [0]
-	tag.track_list_changed.connect(func(): tag_list_changed[0] += 1)
-	track.tag_list_changed.connect(func(): track_list_changed[0] += 1)
+	var tags_changed := [0]
+	var tracks_changed := [0]
+	tag.tracks_changed.connect(func(): tags_changed[0] += 1)
+	track.tags_changed.connect(func(): tracks_changed[0] += 1)
 	var sig_list_changed : Array
 	root.list_changed.connect(func(): sig_list_changed.append(null))
 	
@@ -209,10 +209,10 @@ func _test_tag_creates_records() -> void:
 		"track._role_to_tags['genre'] содержит ровно 1 тег")
 
 	# Сигналы
-	_expect(tag_list_changed[0] == 1,
-		'сигнал tag.track_list_changed получен ровно 1 раз')
-	_expect(track_list_changed[0] == 1,
-		'сигнал track.tag_list_changed получен ровно 1 раз')
+	_expect(tags_changed[0] == 1,
+		'сигнал tag.tracks_changed получен ровно 1 раз')
+	_expect(tracks_changed[0] == 1,
+		'сигнал track.tags_changed получен ровно 1 раз')
 	_expect(sig_list_changed.size() == 0, 'сигнал sig_list_changed получен ровно 0 раз')
 
 
@@ -248,10 +248,10 @@ func _test_untag_removes_records() -> void:
 	tag.tag(track, &'genre')
 	
 	# Сигналы после untag
-	var tag_list_changed := [0]
-	var track_list_changed := [0]
-	tag.track_list_changed.connect(func(): tag_list_changed[0] += 1)
-	track.tag_list_changed.connect(func(): track_list_changed[0] += 1)
+	var tags_changed := [0]
+	var tracks_changed := [0]
+	tag.tracks_changed.connect(func(): tags_changed[0] += 1)
+	track.tags_changed.connect(func(): tracks_changed[0] += 1)
 	var sig_list_changed : Array
 	root.list_changed.connect(func(): sig_list_changed.append(null))
 	
@@ -271,10 +271,10 @@ func _test_untag_removes_records() -> void:
 		"track._role_to_tags НЕ содержит ключ 'genre' (массив был пустым — ключ удалён)")
 	
 	# Сигналы
-	_expect(tag_list_changed[0] == 1,
-		'сигнал tag.track_list_changed получен ровно 1 раз')
-	_expect(track_list_changed[0] == 1,
-		'сигнал track.tag_list_changed получен ровно 1 раз')
+	_expect(tags_changed[0] == 1,
+		'сигнал tag.tracks_changed получен ровно 1 раз')
+	_expect(tracks_changed[0] == 1,
+		'сигнал track.tags_changed получен ровно 1 раз')
 	_expect(sig_list_changed.size() == 0, 'сигнал sig_list_changed получен ровно 0 раз')
 
 

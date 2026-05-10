@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dm22aqr1udm4p" path="res://core/database_holder.gd" id="1_53q0u"]
 [ext_resource type="Script" uid="uid://bhic7qjp5we5c" path="res://core/database/db_list_root.gd" id="2_pjrb6"]
 [ext_resource type="FontFile" uid="uid://ba0qku21a0nbs" path="res://interface/theme/__font/stix_two_math/stix_two_math_regular.ttf" id="3_xwkvk"]
-[ext_resource type="PackedScene" uid="uid://bej3i78pngx2v" path="res://interface/track_list/tracklist.tscn" id="4_c651c"]
+[ext_resource type="PackedScene" uid="uid://bej3i78pngx2v" path="res://interface/tracklist/tracklist.tscn" id="4_c651c"]
 [ext_resource type="Script" uid="uid://drdf5cio74nl7" path="res://core/database/db_list_ordered.gd" id="5_3wy1v"]
 
 [sub_resource type="Resource" id="Resource_xwkvk"]
