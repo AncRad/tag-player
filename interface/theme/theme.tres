@@ -1,0 +1,44 @@
+[gd_resource type="Theme" format=3 uid="uid://chkd3gc1ggmjt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_onx5k"]
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0.05647059, 0.05647059, 0.05647059, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_514xh"]
+content_margin_left = 5.0
+content_margin_top = 4.0
+content_margin_right = 5.0
+content_margin_bottom = 4.0
+bg_color = Color(0.05647059, 0.05647059, 0.05647059, 1)
+border_color = Color(0.049411766, 0.049411766, 0.049411766, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 3
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yt7k2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dn82i"]
+bg_color = Color(0.15, 0.15, 0.15, 1)
+
+[resource]
+HBoxContainer/constants/separation = 0
+Panel/styles/panel = SubResource("StyleBoxFlat_onx5k")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_514xh")
+Tracklist/colors/track_font_color = Color(0.513153, 0.513153, 0.513153, 1)
+Tracklist/constants/margin = 2
+Tracklist/constants/track_separation = 4
+Tracklist/font_sizes/track_font_size = 14
+Tracklist/fonts/track_font = null
+Tracklist/styles/track_background_normal = SubResource("StyleBoxEmpty_yt7k2")
+Tracklist/styles/track_background_selected = SubResource("StyleBoxFlat_dn82i")
+VBoxContainer/constants/separation = 0

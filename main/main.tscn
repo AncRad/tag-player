@@ -2,14 +2,136 @@
 
 [ext_resource type="Script" uid="uid://dm22aqr1udm4p" path="res://core/database_holder.gd" id="1_53q0u"]
 [ext_resource type="Script" uid="uid://bhic7qjp5we5c" path="res://core/database/db_list_root.gd" id="2_pjrb6"]
+[ext_resource type="FontFile" uid="uid://ba0qku21a0nbs" path="res://interface/theme/__font/stix_two_math/stix_two_math_regular.ttf" id="3_xwkvk"]
+[ext_resource type="PackedScene" uid="uid://bej3i78pngx2v" path="res://interface/track_list/tracklist.tscn" id="4_c651c"]
+[ext_resource type="Script" uid="uid://drdf5cio74nl7" path="res://core/database/db_list_ordered.gd" id="5_3wy1v"]
 
 [sub_resource type="Resource" id="Resource_xwkvk"]
-resource_local_to_scene = true
 script = ExtResource("2_pjrb6")
 metadata/_custom_type_script = "uid://bhic7qjp5we5c"
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c651c"]
+
+[sub_resource type="Theme" id="Theme_3wy1v"]
+default_font = ExtResource("3_xwkvk")
+default_font_size = 50
+Button/styles/disabled = SubResource("StyleBoxEmpty_c651c")
+Button/styles/disabled_mirrored = SubResource("StyleBoxEmpty_c651c")
+Button/styles/focus = SubResource("StyleBoxEmpty_c651c")
+Button/styles/hover = SubResource("StyleBoxEmpty_c651c")
+Button/styles/hover_mirrored = SubResource("StyleBoxEmpty_c651c")
+Button/styles/hover_pressed = SubResource("StyleBoxEmpty_c651c")
+Button/styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_c651c")
+Button/styles/normal = SubResource("StyleBoxEmpty_c651c")
+
+[sub_resource type="ImageTexture" id="ImageTexture_pjrb6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pjrb6"]
+content_margin_left = 0.0
+content_margin_top = 25.0
+content_margin_right = 0.0
+content_margin_bottom = 25.0
+bg_color = Color(0.05647059, 0.05647059, 0.05647059, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xwkvk"]
+bg_color = Color(0.4, 0.4, 0.4, 1)
+anti_aliasing = false
+
+[sub_resource type="Resource" id="Resource_kfbq2"]
+script = ExtResource("5_3wy1v")
+parent = SubResource("Resource_xwkvk")
+metadata/_custom_type_script = "uid://drdf5cio74nl7"
 
 [node name="Main" type="Node" unique_id=358438381]
 
 [node name="DatabaseHolder" type="Node" parent="." unique_id=1638917268]
 script = ExtResource("1_53q0u")
 root = SubResource("Resource_xwkvk")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1103784102]
+
+[node name="Control" type="MarginContainer" parent="CanvasLayer" unique_id=485717885]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+metadata/_edit_lock_ = true
+
+[node name="Panel" type="Panel" parent="CanvasLayer/Control" unique_id=1438260652]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control" unique_id=806340717]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/VBoxContainer" unique_id=1255591995]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/VBoxContainer/VBoxContainer" unique_id=481597848]
+layout_mode = 2
+theme = SubResource("Theme_3wy1v")
+alignment = 1
+
+[node name="Button" type="Button" parent="CanvasLayer/Control/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1286722599]
+layout_mode = 2
+focus_mode = 0
+text = "◅"
+flat = true
+
+[node name="Button2" type="Button" parent="CanvasLayer/Control/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1548875089]
+layout_mode = 2
+focus_mode = 0
+text = "□"
+flat = true
+
+[node name="Button3" type="Button" parent="CanvasLayer/Control/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=918332061]
+layout_mode = 2
+focus_mode = 0
+text = "▯▯"
+flat = true
+
+[node name="Button4" type="Button" parent="CanvasLayer/Control/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1004094518]
+layout_mode = 2
+focus_mode = 0
+text = "▷"
+flat = true
+
+[node name="Button5" type="Button" parent="CanvasLayer/Control/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1379686214]
+layout_mode = 2
+focus_mode = 0
+text = "▻"
+flat = true
+
+[node name="PlayerProgress" type="HSlider" parent="CanvasLayer/Control/VBoxContainer/VBoxContainer" unique_id=645622875]
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PlayerProgress"
+theme_override_icons/grabber = SubResource("ImageTexture_pjrb6")
+theme_override_icons/grabber_highlight = SubResource("ImageTexture_pjrb6")
+theme_override_icons/grabber_disabled = SubResource("ImageTexture_pjrb6")
+theme_override_icons/tick = SubResource("ImageTexture_pjrb6")
+theme_override_styles/slider = SubResource("StyleBoxFlat_pjrb6")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_xwkvk")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_xwkvk")
+max_value = 1.0
+step = 0.0
+value = 0.5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/VBoxContainer" unique_id=536499269]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Tracklist" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer" unique_id=966963671 instance=ExtResource("4_c651c")]
+layout_mode = 2
+db_list = SubResource("Resource_kfbq2")
+
+[node name="VScrollBar" type="VScrollBar" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer" unique_id=1198076162]
+layout_mode = 2
+max_value = 1.0
+
+[connection signal="scroll_progress_changed" from="CanvasLayer/Control/VBoxContainer/HBoxContainer/Tracklist" to="CanvasLayer/Control/VBoxContainer/HBoxContainer/VScrollBar" method="set_value_no_signal"]
+[connection signal="value_changed" from="CanvasLayer/Control/VBoxContainer/HBoxContainer/VScrollBar" to="CanvasLayer/Control/VBoxContainer/HBoxContainer/Tracklist" method="set_scroll_progress"]

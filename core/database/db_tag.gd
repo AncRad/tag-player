@@ -60,3 +60,9 @@ func untag(track : DBTrack) -> void:
 
 func get_track_to_role() -> Dictionary[DBTrack, StringName]:
 	return _track_to_role.duplicate()
+
+func get_first_name(default : String = 'UnnamedTag') -> String:
+	if names and names[0]:
+		return names[0]
+	else:
+		return default

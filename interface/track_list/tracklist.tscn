@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://bej3i78pngx2v"]
+
+[ext_resource type="Script" uid="uid://byiif57iia472" path="res://interface/track_list/tracklist.gd" id="1_vatlw"]
+
+[node name="Tracklist" type="Control" unique_id=966963671]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+focus_mode = 1
+script = ExtResource("1_vatlw")
+
+[node name="Label" type="Label" parent="." unique_id=1896013616]
+self_modulate = Color(1, 1, 1, 0.47843137)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -190.0
+offset_top = 5.0
+offset_right = 107.0
+offset_bottom = 105.0
+grow_horizontal = 0
+scale = Vector2(0.623, 0.623)
+text = "1000; 650 мкс"
+horizontal_alignment = 2
+
+[connection signal="debug_string_changed" from="." to="Label" method="set_text"]
