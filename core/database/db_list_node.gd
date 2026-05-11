@@ -24,19 +24,21 @@ var _ordered : DBListOrdered
 var _tracks : Array[DBTrack]
 
 
-func _init(_parent : DBListNode = null) -> void:
-	parent = _parent
+func _init(p_parent : DBListNode = null) -> void:
+	set_parent(p_parent)
 
 func _notification(what : int) -> void:
 	match what:
 		NOTIFICATION_PREDELETE:
-			# важно чтобы освобождение self не приводило к освобождению DBListNode из-за слабых ссылок.
+			# удаление self из памяти нужно считать ошибкой, пока на него ссылаются дочерние DBListNode
 			for child in _children:
 				if is_instance_valid(child):
-					child.reference()
+					push_error("DBListNode удален пока у него есть действительные children: ", _children)
+					break
+			# удаление self из памяти нужно считать ошибкой, пока на него ссылается DBListOrdered
 			if is_instance_valid(_ordered):
-				_ordered.reference()
-			# важно чтобы в parent не было не действительных ссылок в _children
+				push_error("DBListNode удален пока у него есть действительный DBListOrdered: ", _ordered)
+			# важно чтобы в parent не было недействительных ссылок в _children
 			if parent:
 				for i in range(parent._children.size() - 1, -1, -1):
 					if not is_instance_valid(parent._children[i]):
@@ -117,7 +119,7 @@ func add_child(child : DBListNode) -> void:
 	
 	_children.append(child)
 	child.unreference()
-	child.parent = self
+	child.set_parent(self)
 	
 	changes_up()
 
@@ -130,7 +132,7 @@ func remove_child(child : DBListNode) -> void:
 	
 	child.reference()
 	_children.erase(child)
-	child.parent = null
+	child.set_parent(null)
 	
 	changes_up()
 
@@ -170,5 +172,5 @@ func _update() -> void:
 		tracks = parent.get_tracks()
 	
 	if _tracks != tracks:
-		_tracks = []
+		_tracks = tracks
 		changes_up()
