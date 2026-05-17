@@ -23,6 +23,7 @@ func load_dir(path : String) -> void:
 	var tag_last_drop : DBTag = root.get_tag_or_create(['last_drop'], ['system'])
 	var tag_instrumental : DBTag = root.get_tag_or_create(['instrumental'], ['version'])
 	var tag_ost : DBTag = root.get_tag_or_create(['ost'], ['version'])
+	var tag_remix : DBTag = root.get_tag_or_create(['remix'], ['version'])
 	
 	for track : DBTrack in tag_last_drop._track_to_role:
 		tag_last_drop.untag(track)
@@ -46,6 +47,8 @@ func load_dir(path : String) -> void:
 			file_name_parts = file_name.split('-', false)
 		if file_name_parts.size() > 1:
 			
+			# TODO обнаружить метки cover, video, live, remix, edit, IA, ost, etc
+			
 			# обнаружить имена создателей в левой части имени файла
 			if true:
 				# избавиться от точек
@@ -54,6 +57,10 @@ func load_dir(path : String) -> void:
 				var marks_to_replace : Array[String] = [
 					'feat', 'ft',
 					'mix', 'mix by', 'mixBy',
+					'Remix', 'remix by', 'remixBy',
+					'Re mix', 're mix by',
+					'Remux', 'remux by', 'remuxBy',
+					'Re mux', 're mux by',
 					'mastering', 'masteringby', 'mastering by',
 				]
 				# заменить разделители авторов на запятые
@@ -101,6 +108,19 @@ func load_dir(path : String) -> void:
 			# обнаружить метку OST в правой части имени файла
 			if file_name_title.containsn('ost'):
 				tag_ost.tag(track, 'version')
+			
+			# обнаружить метку remix в правой части имени файла
+			if true:
+				var remix_marks : Array[String] = [
+					'Remix', 'remix by', 'remixBy',
+					'Re mix', 're mix by',
+					'Remux', 'remux by', 'remuxBy',
+					'Re mux', 're mux by',
+				]
+				for remix_mark : String in remix_marks:
+					if file_name_title.containsn(remix_mark):
+						tag_remix.tag(track, 'version')
+						break
 			
 			# TODO обнаружить имена создателей в правой части имени файла
 			if true:
