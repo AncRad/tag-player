@@ -139,14 +139,30 @@ func _gui_input(event : InputEvent) -> void:
 				var track : DBTrack = get_track_at_position(event_position)
 				if track:
 					playback.play(0, track, db_list)
+		
+		elif not _selection and (event.is_action_pressed('tracklist_focus', true) or event.is_action_pressed('tracklist_focus_center', true)):
+			accepted = true
+			if _playback_track:
+				var track_index : int = -1
+				if db_list:
+					track_index = db_list.get_tracks().find(_playback_track)
+				
+				if track_index >= 0:
+					if event.is_action_pressed('tracklist_focus', true) and Rect2(Vector2(), size).has_point(get_local_mouse_position()):
+						var cursor_line_local : float = get_local_mouse_position().y / _track_drawer.interval
+						scroll = track_index - cursor_line_local + 0.5
+					
+					elif event.is_action_pressed('tracklist_focus_center', true):
+						scroll = track_index - get_page_size() / 2.0
 	
-	if _selection and event_is_pointer:
-		accepted = true
-		if Input.is_action_pressed('tracklist_selection_begin', true):
-			_selection_to = floori(scroll + event_position.y / _track_drawer.interval)
-			_selection_begin_update()
-		else:
-			_selection = false
+	if event_is_pointer:
+		if _selection:
+			accepted = true
+			if Input.is_action_pressed('tracklist_selection_begin', true):
+				_selection_to = floori(scroll + event_position.y / _track_drawer.interval)
+				_selection_begin_update()
+			else:
+				_selection = false
 	
 	if accepted:
 		accept_event()
@@ -227,7 +243,7 @@ func set_scroll(value : float) -> void:
 		var scroll_progress_after : float = get_scroll_progress()
 		if scroll_progress_befor != scroll_progress_after:
 			scroll_progress_changed.emit(scroll_progress_after)
-	queue_redraw()
+		queue_redraw()
 
 func set_scroll_progress(value : float) -> void:
 	value = clampf(value, 0, 1)
@@ -241,43 +257,6 @@ func set_selected_tracks(tracks : Array[DBTrack]) -> void:
 
 func get_scroll_progress() -> float:
 	return clampf(scroll / get_scroll_max(), 0, 1)
-
-func _set_playback_track(value : DBTrack) -> void:
-	if value != _playback_track:
-		var track_index_before : int = -1
-		if _playback_track and db_list:
-			track_index_before = db_list.get_tracks().find(_playback_track)
-		
-		var track_index_after : int = -1
-		if value:
-			track_index_after = db_list.get_tracks().find(value)
-		
-		_playback_track = value
-		
-		var line_max_count : int = ceili(get_page_size())
-		var begin : int = floori(scroll)
-		var end : int = begin + line_max_count
-		var visible_befor : bool = track_index_before >= begin and track_index_before < end
-		var visible_after : bool = track_index_after >= begin and track_index_after < end
-		
-		if visible_befor or visible_after:
-			queue_redraw()
-		
-		## был ли один из треков в списке db_list
-		if track_index_before >= 0 or track_index_after >= 0:
-			if visible_befor:
-				var margin : int = 2
-				margin = clampi(margin, 0, floori(line_max_count / 2.0))
-				## если проигрываемый трек сдвинулся на 1 строку, то скроллим за ним.
-				var track_line_change := track_index_after - track_index_before
-				if absi(track_line_change) == 1:
-					var track_line_index_before := track_index_before - begin
-					if track_line_change > 0:
-						if track_line_index_before >= margin:
-							scroll += track_line_change
-					elif track_line_change < 0:
-						if track_line_index_before <= line_max_count - 1 - margin:
-							scroll += track_line_change
 
 func get_page_size() -> float:
 	var size_y : float = size.y
@@ -338,3 +317,40 @@ func _selection_begin_update() -> void:
 				else:
 					selected_tracks.erase(track)
 		set_selected_tracks(selected_tracks)
+
+func _set_playback_track(value : DBTrack) -> void:
+	if value != _playback_track:
+		var track_index_before : int = -1
+		if _playback_track and db_list:
+			track_index_before = db_list.get_tracks().find(_playback_track)
+		
+		var track_index_after : int = -1
+		if value:
+			track_index_after = db_list.get_tracks().find(value)
+		
+		_playback_track = value
+		
+		var line_max_count : int = ceili(get_page_size())
+		var begin : int = floori(scroll)
+		var end : int = begin + line_max_count
+		var visible_befor : bool = track_index_before >= begin and track_index_before < end
+		var visible_after : bool = track_index_after >= begin and track_index_after < end
+		
+		if visible_befor or visible_after:
+			queue_redraw()
+		
+		## был ли один из треков в списке db_list
+		if track_index_before >= 0 or track_index_after >= 0:
+			if visible_befor:
+				var margin : int = 2
+				margin = clampi(margin, 0, floori(line_max_count / 2.0))
+				## если проигрываемый трек сдвинулся на 1 строку, то скроллим за ним.
+				var track_line_change := track_index_after - track_index_before
+				if absi(track_line_change) == 1:
+					var track_line_index_before := track_index_before - begin
+					if track_line_change > 0:
+						if track_line_index_before >= margin:
+							scroll += track_line_change
+					elif track_line_change < 0:
+						if track_line_index_before <= line_max_count - 1 - margin:
+							scroll += track_line_change
