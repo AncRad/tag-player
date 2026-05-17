@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://jha7p17g2pwx"]
+
+[ext_resource type="FontFile" uid="uid://ba0qku21a0nbs" path="res://interface/theme/__font/stix_two_math/stix_two_math_regular.ttf" id="1_wfqbj"]
+[ext_resource type="Script" uid="uid://cj2t608wr4566" path="res://interface/playback_buttons/playback_buttons.gd" id="2_oymx0"]
+
+[sub_resource type="Theme" id="Theme_3wy1v"]
+default_font = ExtResource("1_wfqbj")
+default_font_size = 50
+
+[node name="PlaybackButtons" type="HBoxContainer" unique_id=392389310 node_paths=PackedStringArray("pause_button", "play_button")]
+theme = SubResource("Theme_3wy1v")
+alignment = 1
+script = ExtResource("2_oymx0")
+pause_button = NodePath("PauseButton")
+play_button = NodePath("PlayButton")
+
+[node name="PrevButton" type="Button" parent="." unique_id=1754329383]
+layout_mode = 2
+focus_mode = 0
+text = "◅"
+flat = true
+
+[node name="StopButton" type="Button" parent="." unique_id=152871910]
+layout_mode = 2
+focus_mode = 0
+text = "□"
+flat = true
+
+[node name="PauseButton" type="Button" parent="." unique_id=705193443]
+layout_mode = 2
+focus_mode = 0
+text = "▯▯"
+flat = true
+
+[node name="PlayButton" type="Button" parent="." unique_id=1846377339]
+layout_mode = 2
+focus_mode = 0
+text = "▷"
+flat = true
+
+[node name="NextButton" type="Button" parent="." unique_id=2099869442]
+layout_mode = 2
+focus_mode = 0
+text = "▻"
+flat = true
+
+[connection signal="pressed" from="PrevButton" to="." method="_on_prev_button_pressed"]
+[connection signal="pressed" from="StopButton" to="." method="_on_stop_button_pressed"]
+[connection signal="pressed" from="PauseButton" to="." method="_on_pause_button_pressed"]
+[connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="NextButton" to="." method="_on_next_button_pressed"]

@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://ccpfckss5uwlc"]
+
+[ext_resource type="Script" uid="uid://7vj2v8ntuqde" path="res://interface/playback_progress/playback_progress.gd" id="1_5d2pg"]
+
+[node name="PlaybackProgress" type="ProgressBar" unique_id=601910104]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_type_variation = &"PlayerProgress"
+max_value = 1.0
+step = 0.0
+value = 1.0
+show_percentage = false
+script = ExtResource("1_5d2pg")

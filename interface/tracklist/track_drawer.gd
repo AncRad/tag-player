@@ -12,7 +12,8 @@ const BRACKET_STRING_END : String = ')'
 @export var margin : int = 2
 @export var font : Font = FontVariation.new()
 @export var font_size : int = 14
-@export var font_color : Color = Color.WHITE
+@export var font_color_normal : Color = Color.WHITE
+@export var font_color_playback : Color = Color.WHITE
 @export var font_color_selected : Color = Color.WHITE
 @export var separation : int = 20
 @export var background_normal : StyleBox
@@ -44,7 +45,8 @@ func read_theme(context : Control) -> void:
 	margin = context.get_theme_constant(&'margin', theme_type)
 	font = context.get_theme_font(&'track_font', theme_type)
 	font_size = context.get_theme_font_size(&'track_font_size', theme_type)
-	font_color = context.get_theme_color(&'track_font_color', theme_type)
+	font_color_normal = context.get_theme_color(&'track_font_color_normal', theme_type)
+	font_color_playback = context.get_theme_color(&'track_font_color_playback', theme_type)
 	separation = context.get_theme_constant(&'track_separation', theme_type)
 	background_normal = context.get_theme_stylebox(&'track_background_normal', theme_type)
 	background_selected = context.get_theme_stylebox(&'track_background_selected', theme_type)
@@ -61,7 +63,7 @@ func read_theme(context : Control) -> void:
 	bracket_length_begin = font.get_string_size(BRACKET_STRING_BEGIN, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
 	bracket_length_end = font.get_string_size(BRACKET_STRING_END, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
 
-func draw_track(item : RID, track : DBTrack, rect : Rect2) -> void:
+func draw_track(item : RID, track : DBTrack, rect : Rect2, color : Color = Color.WHITE) -> void:
 	# прямоугольная область пустого пространства трека, будет уменьшаться по мере рисования
 	var rect_void : Rect2 = rect.grow_individual(-margin, 0, -margin, 0)
 	
@@ -69,27 +71,27 @@ func draw_track(item : RID, track : DBTrack, rect : Rect2) -> void:
 	var creators_max_length : float = (rect.size.x - margin * 2 - separator_length) / 3 * 2
 	var creators_rect : Rect2 = rect_void
 	creators_rect.size.x = creators_max_length
-	creators_rect = draw_tags(item, creators, creators_rect)
+	creators_rect = draw_tags(item, creators, creators_rect, color)
 	rect_void = rect_void.grow_side(SIDE_LEFT, -creators_rect.size.x)
 	
-	draw_string(item, SEPARATOR_STRING, rect_void)
+	draw_string(item, SEPARATOR_STRING, rect_void, color)
 	rect_void = rect_void.grow_side(SIDE_LEFT, -separator_length)
 	
-	var track_name_rect : Rect2 = draw_string(item, track.name, rect_void)
+	var track_name_rect : Rect2 = draw_string(item, track.name, rect_void, color)
 	rect_void = rect_void.grow_side(SIDE_LEFT, -track_name_rect.size.x)
 	
 	if rect_void.size.x >= bracket_length_begin + tag_length_min + bracket_length_end:
 		var versions : Array[DBTag] = track.get_role_to_tags().get(&'version', [] as Array[DBTag])
 		if versions:
-			draw_string(item, BRACKET_STRING_BEGIN, rect_void)
+			draw_string(item, BRACKET_STRING_BEGIN, rect_void, color)
 			rect_void = rect_void.grow_side(SIDE_LEFT, -bracket_length_begin)
-			var versions_rect : Rect2 = draw_tags(item, versions, rect_void)
+			var versions_rect : Rect2 = draw_tags(item, versions, rect_void, color)
 			rect_void = rect_void.grow_side(SIDE_LEFT, -versions_rect.size.x)
 			if rect_void.size.x >= bracket_length_end:
-				draw_string(item, BRACKET_STRING_END, rect_void)
+				draw_string(item, BRACKET_STRING_END, rect_void, color)
 				rect_void = rect_void.grow_side(SIDE_LEFT, -bracket_length_end)
 
-func draw_tags(item : RID, tags : Array[DBTag], rect : Rect2) -> Rect2:
+func draw_tags(item : RID, tags : Array[DBTag], rect : Rect2, color : Color = Color.WHITE) -> Rect2:
 	# прямоугольная область пустого пространства тегов, будет уменьшаться по мере рисования
 	var rect_void : Rect2 = rect
 	var first := true
@@ -101,10 +103,10 @@ func draw_tags(item : RID, tags : Array[DBTag], rect : Rect2) -> Rect2:
 			if rect_void.size.x < delimieter_length + tag_length_min:
 				break
 			
-			draw_string(item, DELIMITER_STRING, rect_void)
+			draw_string(item, DELIMITER_STRING, rect_void, color)
 			rect_void = rect_void.grow_side(SIDE_LEFT, -delimieter_length)
 		
-		var tag_rect : Rect2 = draw_string(item, tag.get_first_name(), rect_void)
+		var tag_rect : Rect2 = draw_string(item, tag.get_first_name(), rect_void, color)
 		rect_void = rect_void.grow_side(SIDE_LEFT, -tag_rect.size.x)
 		
 		first = false
@@ -118,9 +120,9 @@ func draw_tags(item : RID, tags : Array[DBTag], rect : Rect2) -> Rect2:
 	
 	return tags_rect
 
-func draw_string(item : RID, string : String, rect : Rect2) -> Rect2:
+func draw_string(item : RID, string : String, rect : Rect2, color : Color = Color.WHITE) -> Rect2:
 	font.draw_string(item, rect.position + Vector2(0, font_offset_y), string, HORIZONTAL_ALIGNMENT_LEFT,
-			rect.size.x, font_size, font_color, TextServer.JUSTIFICATION_NONE)
+			rect.size.x, font_size, color, TextServer.JUSTIFICATION_NONE)
 	
 	var string_rect : Rect2 = rect
 	string_rect.size.x = font.get_string_size(string, HORIZONTAL_ALIGNMENT_LEFT,

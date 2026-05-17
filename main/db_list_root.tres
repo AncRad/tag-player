@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="DBListRoot" format=3 uid="uid://0uhei2qhhl26"]
+
+[ext_resource type="Script" uid="uid://bhic7qjp5we5c" path="res://core/database/db_list_root.gd" id="1_7aiga"]
+
+[resource]
+script = ExtResource("1_7aiga")
+metadata/_custom_type_script = "uid://bhic7qjp5we5c"

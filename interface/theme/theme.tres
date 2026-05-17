@@ -5,7 +5,7 @@ content_margin_left = 6.0
 content_margin_top = 4.0
 content_margin_right = 6.0
 content_margin_bottom = 4.0
-bg_color = Color(0.05647059, 0.05647059, 0.05647059, 1)
+bg_color = Color(0.039215688, 0.039215688, 0.039215688, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -17,13 +17,26 @@ content_margin_left = 5.0
 content_margin_top = 4.0
 content_margin_right = 5.0
 content_margin_bottom = 4.0
-bg_color = Color(0.05647059, 0.05647059, 0.05647059, 1)
+bg_color = Color(0.039215688, 0.039215688, 0.039215688, 1)
 border_color = Color(0.049411766, 0.049411766, 0.049411766, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 3
+
+[sub_resource type="ImageTexture" id="ImageTexture_pjrb6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pjrb6"]
+content_margin_left = 0.0
+content_margin_top = 25.0
+content_margin_right = 0.0
+content_margin_bottom = 25.0
+bg_color = Color(0.039215688, 0.039215688, 0.039215688, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xwkvk"]
+bg_color = Color(0.4, 0.4, 0.4, 1)
+anti_aliasing = false
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yt7k2"]
 
@@ -34,7 +47,15 @@ bg_color = Color(0.15, 0.15, 0.15, 1)
 HBoxContainer/constants/separation = 0
 Panel/styles/panel = SubResource("StyleBoxFlat_onx5k")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_514xh")
-Tracklist/colors/track_font_color = Color(0.513153, 0.513153, 0.513153, 1)
+PlayerProgress/base_type = &"ProgressBar"
+PlayerProgress/icons/grabber = SubResource("ImageTexture_pjrb6")
+PlayerProgress/icons/grabber_disabled = SubResource("ImageTexture_pjrb6")
+PlayerProgress/icons/grabber_highlight = SubResource("ImageTexture_pjrb6")
+PlayerProgress/icons/tick = SubResource("ImageTexture_pjrb6")
+PlayerProgress/styles/background = SubResource("StyleBoxFlat_pjrb6")
+PlayerProgress/styles/fill = SubResource("StyleBoxFlat_xwkvk")
+Tracklist/colors/track_font_color_normal = Color(0.513153, 0.513153, 0.513153, 1)
+Tracklist/colors/track_font_color_playback = Color(0.8, 0.8, 0.8, 1)
 Tracklist/constants/margin = 2
 Tracklist/constants/track_separation = 4
 Tracklist/font_sizes/track_font_size = 14

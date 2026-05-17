@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DBListOrdered" format=3 uid="uid://c44nsus5ehvbm"]
+
+[ext_resource type="Resource" uid="uid://0uhei2qhhl26" path="res://main/db_list_root.tres" id="1_271tq"]
+[ext_resource type="Script" uid="uid://drdf5cio74nl7" path="res://core/database/db_list_ordered.gd" id="2_tf3im"]
+
+[resource]
+script = ExtResource("2_tf3im")
+parent = ExtResource("1_271tq")
+metadata/_custom_type_script = "uid://drdf5cio74nl7"

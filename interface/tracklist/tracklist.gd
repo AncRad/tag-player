@@ -11,10 +11,14 @@ signal debug_string_changed(string : String)
 @export var db_list : DBListNode:
 	set = set_db_list
 
+@export var playback : Playback:
+	set = set_playback
+
 @export var scroll : float:
 	set = set_scroll
 
-@export var scroll_progress : float:
+@export_range(0, 1, 0.00001)
+var scroll_progress : float:
 	set = set_scroll_progress,
 	get = get_scroll_progress
 
@@ -23,6 +27,8 @@ var _track_drawer_updated : bool
 var _debug_drawn : int
 var _selected_tracks : Array[DBTrack]
 var _rect_to_track : Dictionary[Rect2, DBTrack]
+var _playback_track : DBTrack:
+	set = _set_playback_track
 
 var _selection : bool:
 	set(value):
@@ -53,7 +59,7 @@ func _notification(what : int) -> void:
 				_selection = false
 
 func _input(event: InputEvent) -> void:
-	if _selection and event.is_action_released('tracklist_selection_begin', true):
+	if _selection and event.is_action_released('tracklist_selection_begin'):
 		accept_event()
 		_selection = false
 
@@ -99,10 +105,13 @@ func _gui_input(event : InputEvent) -> void:
 		elif event.is_action('tracklist_selection_begin', true) and event_is_pointer:
 			accepted = true
 			if event.is_pressed() != _selection:
-				_selection = true
-				_selection_tracks = get_selected_tracks(false)
-				_selection_from = floori(scroll + event_position.y / _track_drawer.interval)
-				_selection_to = _selection_from
+				if event.is_pressed():
+					_selection = true
+					_selection_tracks = get_selected_tracks(false)
+					_selection_from = floori(scroll + event_position.y / _track_drawer.interval)
+					_selection_to = _selection_from
+				else:
+					_selection = false
 		
 		elif event.is_action_pressed('tracklist_selection') and event_is_pointer:
 			accepted = true
@@ -123,11 +132,21 @@ func _gui_input(event : InputEvent) -> void:
 		elif event.is_action_pressed('tracklist_scroll_down', true):
 			accepted = true
 			scroll += 1
+		
+		elif event.is_action_pressed('tracklist_play') and event_is_pointer:
+			accepted = true
+			if playback:
+				var track : DBTrack = get_track_at_position(event_position)
+				if track:
+					playback.play(0, track, db_list)
 	
 	if _selection and event_is_pointer:
 		accepted = true
-		_selection_to = floori(scroll + event_position.y / _track_drawer.interval)
-		_selection_begin_update()
+		if Input.is_action_pressed('tracklist_selection_begin', true):
+			_selection_to = floori(scroll + event_position.y / _track_drawer.interval)
+			_selection_begin_update()
+		else:
+			_selection = false
 	
 	if accepted:
 		accept_event()
@@ -160,7 +179,13 @@ func _draw() -> void:
 		else:
 			_track_drawer.background_normal.draw(get_canvas_item(), track_rect)
 		
-		_track_drawer.draw_track(get_canvas_item(), track, track_rect)
+		var track_font_color : Color
+		if playback and track == playback.track:
+			track_font_color = _track_drawer.font_color_playback
+		else:
+			track_font_color = _track_drawer.font_color_normal
+		
+		_track_drawer.draw_track(get_canvas_item(), track, track_rect, track_font_color)
 		_rect_to_track[track_rect] = track
 		
 		track_number += 1
@@ -179,6 +204,19 @@ func set_db_list(value : DBListNode) -> void:
 		if db_list:
 			db_list.list_changed.connect(_on_db_list_changed)
 		_on_db_list_changed()
+
+func set_playback(value : Playback) -> void:
+	if value != playback:
+		if playback:
+			playback.track_changed.disconnect(_on_playback_track_changed)
+		
+		playback = value
+		
+		if playback:
+			playback.track_changed.connect(_on_playback_track_changed)
+			_set_playback_track(playback.track)
+		else:
+			_set_playback_track(null)
 
 func set_scroll(value : float) -> void:
 	value = clampf(value, 0, get_scroll_max())
@@ -203,6 +241,43 @@ func set_selected_tracks(tracks : Array[DBTrack]) -> void:
 
 func get_scroll_progress() -> float:
 	return clampf(scroll / get_scroll_max(), 0, 1)
+
+func _set_playback_track(value : DBTrack) -> void:
+	if value != _playback_track:
+		var track_index_before : int = -1
+		if _playback_track and db_list:
+			track_index_before = db_list.get_tracks().find(_playback_track)
+		
+		var track_index_after : int = -1
+		if value:
+			track_index_after = db_list.get_tracks().find(value)
+		
+		_playback_track = value
+		
+		var line_max_count : int = ceili(get_page_size())
+		var begin : int = floori(scroll)
+		var end : int = begin + line_max_count
+		var visible_befor : bool = track_index_before >= begin and track_index_before < end
+		var visible_after : bool = track_index_after >= begin and track_index_after < end
+		
+		if visible_befor or visible_after:
+			queue_redraw()
+		
+		## был ли один из треков в списке db_list
+		if track_index_before >= 0 or track_index_after >= 0:
+			if visible_befor:
+				var margin : int = 2
+				margin = clampi(margin, 0, floori(line_max_count / 2.0))
+				## если проигрываемый трек сдвинулся на 1 строку, то скроллим за ним.
+				var track_line_change := track_index_after - track_index_before
+				if absi(track_line_change) == 1:
+					var track_line_index_before := track_index_before - begin
+					if track_line_change > 0:
+						if track_line_index_before >= margin:
+							scroll += track_line_change
+					elif track_line_change < 0:
+						if track_line_index_before <= line_max_count - 1 - margin:
+							scroll += track_line_change
 
 func get_page_size() -> float:
 	var size_y : float = size.y
@@ -246,6 +321,9 @@ func _theme_changed() -> void:
 func _on_db_list_changed() -> void:
 	_selection_begin_update()
 	queue_redraw()
+
+func _on_playback_track_changed(track : DBTrack) -> void:
+	_set_playback_track(track)
 
 func _selection_begin_update() -> void:
 	if _selection:

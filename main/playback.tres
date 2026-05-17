@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Playback" format=3 uid="uid://ukbqhm3ixocl"]
+
+[ext_resource type="Script" path="res://core/player/playback.gd" id="1_igh0y"]
+[ext_resource type="Resource" uid="uid://c44nsus5ehvbm" path="res://main/db_list_root_ordered.tres" id="1_wjcx1"]
+
+[resource]
+script = ExtResource("1_igh0y")
+list = ExtResource("1_wjcx1")
+volume = 0.3
